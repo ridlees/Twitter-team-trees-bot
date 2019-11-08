@@ -9,7 +9,6 @@ from bs4 import BeautifulSoup
 import time #To set the loop
 import tweepy
 
-#TODO import TwitterAPI
 
 def Get_latest_donor():
     #Variables for the functions
@@ -18,7 +17,7 @@ def Get_latest_donor():
     page = requests.get(URL, headers = headers)
     soup= BeautifulSoup(page.content, 'html.parser')
 
-    totalTrees_left = 20000000 - int(soup.findAll("div",{"id": "totalTrees"})[0].get("data-count"))
+    totalTrees_left = 20000000 - int(soup.findAll("div",{"id": "totalTrees"})[0].get("data-count")) #the goal is 20 000 000
     
     List_of_donors = soup.findAll("div",{"class":"media pt-3"})
     name = List_of_donors[0].findAll("strong")[0].text
@@ -34,7 +33,7 @@ def Parse_text(donor):
     text = text + "\n #teamtrees"
     return text
 
-def Post_twitter(donor,api):
+def Post_twitter(donor,api): #it should be checking for the same tweets but right now it doesn't matter that much.
     text = Parse_text(donor)
     try:
         api.update_status(text)
@@ -44,7 +43,7 @@ def Post_twitter(donor,api):
 def Loop(api):
     Post_twitter(Get_latest_donor(),api)
     print("sent")
-    time.sleep(120)
+    time.sleep(120) #change to adjust the posting
     Loop(api)
     
 if __name__ == '__main__':
