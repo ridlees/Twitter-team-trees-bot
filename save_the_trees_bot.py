@@ -17,7 +17,11 @@ def Get_latest_donor():
     page = requests.get(URL, headers = headers)
     soup= BeautifulSoup(page.content, 'html.parser')
 
-    totalTrees_left = 20000000 - int(soup.findAll("div",{"id": "totalTrees"})[0].get("data-count")) #the goal is 20 000 000
+    totalTrees = int(soup.findAll("div",{"id": "totalTrees"})[0].get("data-count"))
+    if totalTrees <= 20000000:
+       totalTrees_left = 20000000 - totalTrees#the goal is 20 000 000
+    else:
+       totalTrees_left = totalTrees
     
     List_of_donors = soup.findAll("div",{"class":"media pt-3"})
     name = List_of_donors[0].findAll("strong")[0].text
